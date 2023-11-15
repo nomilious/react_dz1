@@ -8,21 +8,28 @@ const LoginForm = () => {
     const [error, setError] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try {
-            const response = await fetch("", {
-                method:"POST",
-                header: {
-                    'Content-type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify({ email, password }),
+        fetch("https://jsonplaceholder.typicode.com/posts", {
+            method:"POST",
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            body: JSON.stringify({ email, password }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
             })
-            // const data = await response.json();
-            setMessage("Удача! У нас получилось !!")
-        } catch (error) {
-            console.error('Ошибка:', error);
-            setError(true);
-            setMessage('Что-то пошло не так...');
-        }
+            .then(() => {
+                // console.log(data)
+                setMessage("Удача! У нас получилось !!");
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                setError(true);
+                setMessage("Ошибка: " + error.message);
+            });
     }
     const messageClass = error ? "danger" : "success"; // Определение класса в зависимости от ошибки
     return (
