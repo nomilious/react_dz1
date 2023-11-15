@@ -4,7 +4,8 @@ import "./LoginForm.css"
 const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState(false);
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
@@ -15,12 +16,15 @@ const LoginForm = () => {
                 },
                 body: JSON.stringify({ email, password }),
             })
-            const data = await response.json();
+            // const data = await response.json();
+            setMessage("Удача! У нас получилось !!")
         } catch (error) {
             console.error('Ошибка:', error);
-            // setResponseMessage('Что-то пошло не так...');
+            setError(true);
+            setMessage('Что-то пошло не так...');
         }
     }
+    const messageClass = error ? "danger" : "success"; // Определение класса в зависимости от ошибки
     return (
         <div className="container">
             <h1>Форма аутентификации</h1>
@@ -30,7 +34,7 @@ const LoginForm = () => {
                     type="email"
                     id="email"
                     name="email"
-                    value={email}
+                    placeholder="Email"
                     onChange={(e) => setEmail(e.target.value)}
                     required
                 />
@@ -39,11 +43,12 @@ const LoginForm = () => {
                     type="password"
                     id="password"
                     name="password"
-                    value={password}
+                    placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
                 <button type="submit">Войти</button>
+                <p id="message" className={messageClass}>{message}</p>
             </form>
         </div>
     )
